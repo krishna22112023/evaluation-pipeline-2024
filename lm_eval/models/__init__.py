@@ -1,4 +1,5 @@
 from . import (
+    custom,
     anthropic_llms,
     dummy,
     gguf,

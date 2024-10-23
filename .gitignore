@@ -21,3 +21,4 @@ lm_eval/caching/.cache
 wandb
 examples/wandb
 evaluation_data/
+results/

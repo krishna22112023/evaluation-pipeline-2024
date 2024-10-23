@@ -1286,9 +1286,13 @@ class ConfigurableTask(Task):
                     raise ValueError
                 # and this stores our "regular" conditional loglikelihoods
                 lls = lls[::2]
-
-            pred = np.argmax(lls)
-            pred_norm = np.argmax(lls / completion_len)
+            
+            if lls.count(lls[0]) == len(lls):    # if all probs are equal
+                pred = random.randint(0, len(lls)-1)
+                pred_norm = pred
+            else:
+                pred = np.argmax(lls)
+                pred_norm = np.argmax(lls / completion_len)
 
             if self.multiple_input:
                 gold = self.doc_to_text(doc)

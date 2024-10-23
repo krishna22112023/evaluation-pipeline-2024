@@ -25,12 +25,12 @@ class RobertaLM(LM):
         self._max_length = 512   
         self.tokenizer = self.load_tokenizer()   
         self.vocab_size = self.tokenizer.vocab_size
+        self.device = self.args.WML.device
         if self.args.eval.model_location == "local":
             self.model = self.load_model()
         else:
             self.model = self.load_hf_model()
         self.batch_size = 1
-        self.device = self.config["device"]
     
     def load_tokenizer(self):
         if self.args.eval.tokenizer_type == "pretrained":
@@ -96,7 +96,7 @@ class RobertaLM(LM):
         elif self.args.WML.model_type == "CLM":
             peer_model = AutoModelForCausalLM.from_config(config)
         peer_model.load_state_dict(state_dict)
-        peer_model.to(self.config["device"])
+        peer_model.to(self.device)
         num_params = sum(torch.sum(p != 0).item() for p in peer_model.parameters() if p.requires_grad)
         logger.info(f"loaded a local peer model with {num_params} parameters")
         return peer_model
